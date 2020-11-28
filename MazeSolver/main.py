@@ -1,28 +1,88 @@
-import argparse
-import Maze as MazeSolver
+import fileinput
+
+
+class Maze:
+    '''Creating a matrix named sol with same size of maze and printing solution'''
+    def solve_Maze(self, maze):
+        sol = [[0 for j in range(matrix_Size_xaxis)]for i in range(matrix_Size_yaxis)]
+        if res.solve_Maze_Util(maze, 0, 0, sol) is False:
+            return False
+        res.del_Wrong_Path(sol)
+        return sol
+
+    ''' This function solves the Maze problem using Backtracking.
+    It returns false if no path is possible,otherwise return true and
+    prints the path in the form of 1s.'''
+    def solve_Maze_Util(self, maze, row_pointer, column_pointer, sol):
+        # base case check if the pointers reached the end point
+        if maze[matrix_Size_yaxis - 1][matrix_Size_xaxis - 1] == 1 and sol[matrix_Size_yaxis - 1][matrix_Size_xaxis - 1] == 1:
+            return True
+        # Returns false if the ending point or Starting point is blocked
+        elif maze[matrix_Size_yaxis - 1][matrix_Size_xaxis - 1] == 0 or maze[0][0] == 0:
+            return False
+        # checks if it is safe to move to the pointers location by calling isSafe function
+        if res.isSafe(maze, row_pointer, column_pointer, sol) is True:
+            sol[row_pointer][column_pointer] = 1
+            Maze.pointer_Mover(self, maze, row_pointer, column_pointer, sol)
+        if sol[matrix_Size_yaxis - 1][matrix_Size_xaxis - 1] == 0:
+            return False
+
+    def pointer_Mover(self, maze, row_pointer, column_pointer, sol):
+        # moving pointer rightward will be valid or not
+        if res.solve_Maze_Util(maze, row_pointer, column_pointer + 1, sol) is True:
+            return True
+        # moving pointer leftward will be valid or not
+        elif sol[row_pointer][column_pointer - 1] == 0 and maze[row_pointer][column_pointer - 1] == 1 and column_pointer != 0:
+            res.solve_Maze_Util(maze, row_pointer, column_pointer - 1, sol)
+            return True
+        # moving pointer downward will be valid or not
+        if res.solve_Maze_Util(maze, row_pointer + 1, column_pointer, sol) is True:
+            return True
+        # moving pointer upward will be valid or not
+        elif sol[row_pointer - 1][column_pointer] == 0 and maze[row_pointer - 1][column_pointer] == 1 and row_pointer != 0:
+            res.solve_Maze_Util(maze, row_pointer - 1, column_pointer, sol)
+            return True
+
+    '''This function checks if it is safe to move to pointers location'''
+    def isSafe(self, maze, row_pointer, column_pointer, sol):
+        if row_pointer < matrix_Size_yaxis and column_pointer < matrix_Size_xaxis and maze[row_pointer][column_pointer] == 1:
+            return True
+        return False
+
+    '''Returns true if path was blocked'''
+    def del_Wrong_Path(self, sol):
+        for i in range(1, len(sol) - 1):
+            for j in range(1, len(sol[0]) - 1):
+                if sol[i + 1][j] == 0 and sol[i - 1][j] == 0 and sol[i][j + 1] == 0:
+                    sol[i][j] = 0
+                if sol[i + 1][j] == 0 and sol[i - 1][j] == 0 and sol[i][j - 1] == 0:
+                    sol[i][j] = 0
+                if sol[i - 1][j] == 0 and sol[i][j + 1] == 0 and sol[i][j - 1] == 0:
+                    sol[i][j] = 0
+                if sol[i + 1][j] == 0 and sol[i][j + 1] == 0 and sol[i][j - 1] == 0:
+                    sol[i][j] = 0
+                if sol[i][j] == 0 and sol[i + 1][j] == 1 and sol[i + 1][j + 1] == 0 and sol[i + 1][j - 1] == 0:
+                    sol[i + 1][j] = 0
+                if sol[i][j] == 0 and sol[i - 1][j] == 1 and sol[i - 1][j + 1] == 0 and sol[i - 1][j - 1] == 0:
+                    sol[i - 1][j] = 0
+                if sol[i][j] == 0 and sol[i][j + 1] == 1 and sol[i - 1][j + 1] == 0 and sol[i + 1][j + 1] == 0:
+                    sol[i][j + 1] = 0
+                if sol[i][j] == 0 and sol[i][j - 1] == 1 and sol[i - 1][j - 1] == 0 and sol[i + 1][j - 1] == 0:
+                    sol[i][j - 1] = 0
+        return sol
+
+
+''' Taking input from input.txt and Assigning it to maze'''
+maze = []
+Input = str(input("Enter the name of Input file:-"))
+for line in fileinput.input(files=(Input)):
+    element = list(map(int, line.split()))
+    maze.append(element)
+
+'''Maze Size'''
+matrix_Size_xaxis = len(maze[0])
+matrix_Size_yaxis = len(maze)
 
 '''calling solve_Maze function'''
-res = MazeSolver.Maze()
-res.solve_Maze(MazeSolver.maze)
-
-
-def Main():
-    pars = argparse.ArgumentParser()
-    pars.add_argument("-o", "--outputfile", help="Output the result to a file", action="store_true")
-    pars.add_argument("-i", "--inputfile", help="Output the result to a file", action="store_true")
-    ars = pars.parse_args()
-    if ars.outputfile:
-        data = open("outputfile.txt", "a")
-        if res.solve_Maze(MazeSolver.maze) is False:
-            data.write(str("-1"))
-        else:
-            for i in res.solve_Maze(MazeSolver.maze):
-                for result in i:
-                    data.write(str(result) + " ")
-                data.write('\n')
-    if ars.inputfile:
-        MazeSolver.Input = "inputfile.txt"
-
-
-if __name__ == '__main__':
-    Main()
+res = Maze()
+res.solve_Maze(maze)
