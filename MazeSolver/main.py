@@ -4,7 +4,7 @@ import fileinput
 class Maze:
     '''Creating a matrix named sol with same size of maze and printing solution'''
     def solve_Maze(self, maze):
-        sol = [[0 for j in range(matrix_Size_xaxis)]for i in range(matrix_Size_yaxis)]
+        sol = [[0 for i in range(matrix_Size_xaxis)]for j in range(matrix_Size_yaxis)]
         if res.solve_Maze_Util(maze, 0, 0, sol) is False:
             return False
         res.del_Wrong_Path(sol)
@@ -19,6 +19,8 @@ class Maze:
             return True
         # Returns false if the ending point or Starting point is blocked
         elif maze[matrix_Size_yaxis - 1][matrix_Size_xaxis - 1] == 0 or maze[0][0] == 0:
+            return False
+        if res.isSafe(maze, row_pointer, column_pointer, sol) is False:
             return False
         # checks if it is safe to move to the pointers location by calling isSafe function
         if res.isSafe(maze, row_pointer, column_pointer, sol) is True:
@@ -42,6 +44,7 @@ class Maze:
         elif sol[row_pointer - 1][column_pointer] == 0 and maze[row_pointer - 1][column_pointer] == 1 and row_pointer != 0:
             res.solve_Maze_Util(maze, row_pointer - 1, column_pointer, sol)
             return True
+        return False
 
     '''This function checks if it is safe to move to pointers location'''
     def isSafe(self, maze, row_pointer, column_pointer, sol):
@@ -53,22 +56,16 @@ class Maze:
     def del_Wrong_Path(self, sol):
         for i in range(1, len(sol) - 1):
             for j in range(1, len(sol[0]) - 1):
-                if sol[i + 1][j] == 0 and sol[i - 1][j] == 0 and sol[i][j + 1] == 0:
-                    sol[i][j] = 0
-                if sol[i + 1][j] == 0 and sol[i - 1][j] == 0 and sol[i][j - 1] == 0:
-                    sol[i][j] = 0
-                if sol[i - 1][j] == 0 and sol[i][j + 1] == 0 and sol[i][j - 1] == 0:
-                    sol[i][j] = 0
-                if sol[i + 1][j] == 0 and sol[i][j + 1] == 0 and sol[i][j - 1] == 0:
-                    sol[i][j] = 0
-                if sol[i][j] == 0 and sol[i + 1][j] == 1 and sol[i + 1][j + 1] == 0 and sol[i + 1][j - 1] == 0:
-                    sol[i + 1][j] = 0
-                if sol[i][j] == 0 and sol[i - 1][j] == 1 and sol[i - 1][j + 1] == 0 and sol[i - 1][j - 1] == 0:
-                    sol[i - 1][j] = 0
-                if sol[i][j] == 0 and sol[i][j + 1] == 1 and sol[i - 1][j + 1] == 0 and sol[i + 1][j + 1] == 0:
-                    sol[i][j + 1] = 0
-                if sol[i][j] == 0 and sol[i][j - 1] == 1 and sol[i - 1][j - 1] == 0 and sol[i + 1][j - 1] == 0:
-                    sol[i][j - 1] = 0
+                if sol[i][j] == 1:
+                    # checks every element in the sol Matrix with three directions blocked
+                    if sol[i + 1][j] == 0 and sol[i - 1][j] == 0 and sol[i][j + 1] == 0:
+                        sol[i][j] = 0
+                    if sol[i + 1][j] == 0 and sol[i - 1][j] == 0 and sol[i][j - 1] == 0:
+                        sol[i][j] = 0
+                    if sol[i - 1][j] == 0 and sol[i][j + 1] == 0 and sol[i][j - 1] == 0:
+                        sol[i][j] = 0
+                    if sol[i + 1][j] == 0 and sol[i][j + 1] == 0 and sol[i][j - 1] == 0:
+                        sol[i][j] = 0
         return sol
 
 
