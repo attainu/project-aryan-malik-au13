@@ -1,10 +1,6 @@
 import argparse
 import main as MazeSolver
 
-'''calling solve_Maze function'''
-res = MazeSolver.Maze()
-res.solve_Maze(MazeSolver.maze)
-
 
 def Main():
     pars = argparse.ArgumentParser()
@@ -13,16 +9,17 @@ def Main():
     ars = pars.parse_args()
     if ars.outputfile:
         data = open("outputfile.txt", "a")
-        if res.solve_Maze(MazeSolver.maze) is False:
+        if MazeSolver.res.solve_Maze(MazeSolver.maze) is False:
             data.write(str("-1"))
         else:
-            for i in res.solve_Maze(MazeSolver.maze):
+            for i in MazeSolver.res.solve_Maze(MazeSolver.maze):
                 for result in i:
                     data.write(str(result) + " ")
                 data.write('\n')
-    if ars.inputfile:
-        MazeSolver.Input = "inputfile.txt"
 
+
+'''calling solve_Maze function from main file'''
+MazeSolver.res.solve_Maze(MazeSolver.maze)
 
 if __name__ == '__main__':
     Main()
